@@ -4,9 +4,10 @@ import { TerminalLine } from './Terminal';
 
 interface TerminalOutputProps {
   line: TerminalLine;
+  onContentUpdate?: () => void;
 }
 
-export const TerminalOutput = ({ line }: TerminalOutputProps) => {
+export const TerminalOutput = ({ line, onContentUpdate }: TerminalOutputProps) => {
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
 
@@ -26,14 +27,18 @@ export const TerminalOutput = ({ line }: TerminalOutputProps) => {
       if (currentIndex < text.length) {
         setDisplayedText(text.slice(0, currentIndex + 1));
         currentIndex++;
+        // Call scroll update on each character
+        if (onContentUpdate) {
+          onContentUpdate();
+        }
       } else {
         setIsTyping(false);
         clearInterval(typeInterval);
       }
-    }, 20); // Faster typing speed
+    }, 8); // Much faster typing speed (was 20ms, now 8ms)
 
     return () => clearInterval(typeInterval);
-  }, [line.content, line.type]);
+  }, [line.content, line.type, onContentUpdate]);
 
   const getLineStyles = () => {
     switch (line.type) {
