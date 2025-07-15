@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { TerminalInput } from './TerminalInput';
 import { TerminalOutput } from './TerminalOutput';
@@ -20,7 +19,7 @@ const surpriseFacts = [
   "💡 Brain teaser: Rubber duck debugging is a real thing because explaining code to an inanimate object actually works. Sometimes the duck is smarter than Stack Overflow."
 ];
 
-const commands: Record<string, string> = {
+const commands: Record<string, string | (() => string)> = {
   help: "Available commands: home, about, projects, lab, mindset, contact, surprise, help ai – type one to explore my digital soul.",
   home: `Hey, I'm Sifeddine. I build systems that run without me. Not lazy—smart. 
 
@@ -134,9 +133,10 @@ export const Terminal = () => {
       return;
     }
 
-    const response = typeof commands[trimmedCommand] === 'function' 
-      ? (commands[trimmedCommand] as () => string)()
-      : commands[trimmedCommand] || `Command not found: ${trimmedCommand}. Type 'help' for available commands.`;
+    const commandHandler = commands[trimmedCommand];
+    const response = typeof commandHandler === 'function' 
+      ? commandHandler()
+      : commandHandler || `Command not found: ${trimmedCommand}. Type 'help' for available commands.`;
     
     const outputLine: TerminalLine = {
       id: `out-${Date.now()}`,

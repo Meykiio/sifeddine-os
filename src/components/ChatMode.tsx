@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, Send, Bot, User } from 'lucide-react';
 
-const OPENAI_API_KEY = process.env.NEXT_PUBLIC_OPENAI_API_KEY || process.env.OPENAI_API_KEY || '<YOUR_OPENAI_API_KEY_HERE>';
+const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY || '<YOUR_OPENAI_API_KEY_HERE>';
 
 interface Message {
   id: string;
