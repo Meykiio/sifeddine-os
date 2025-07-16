@@ -81,7 +81,11 @@ Email: sifeddine.meb96@gmail.com`,
   "help ai": "AI mode activated…\n[Terminal morphs into ChatGPT interface—speak your mind.]"
 };
 
-export const Terminal = () => {
+interface TerminalProps {
+  onBackgroundTransition?: (isTransitioning: boolean) => void;
+}
+
+export const Terminal = ({ onBackgroundTransition }: TerminalProps) => {
   const [lines, setLines] = useState<TerminalLine[]>([
     {
       id: '1',
@@ -98,7 +102,16 @@ export const Terminal = () => {
   
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
-  const [isAIMode, setIsAIMode] = useState(false);
+  const [isChatMode, setIsChatMode] = useState(false);
+
+  // Handle background change when switching to AI chat mode with smooth crossfade
+  useEffect(() => {
+    // Notify parent component about the transition
+    if (onBackgroundTransition) {
+      onBackgroundTransition(isChatMode);
+    }
+  }, [isChatMode, onBackgroundTransition]);
+
   const terminalRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -140,7 +153,7 @@ export const Terminal = () => {
     if (trimmedCommand === 'help ai') {
       setLines(prev => [...prev, commandLine]);
       setLatestLineId(commandLine.id);
-      setIsAIMode(true);
+      setIsChatMode(true);
       return;
     }
 
@@ -169,8 +182,8 @@ export const Terminal = () => {
     return commandKeys.filter(cmd => cmd.startsWith(input.toLowerCase()));
   };
 
-  const exitAIMode = () => {
-    setIsAIMode(false);
+  const exitChatMode = () => {
+    setIsChatMode(false);
     const exitLineId = `ai-exit-${Date.now()}`;
     const exitLine: TerminalLine = {
       id: exitLineId,
@@ -183,10 +196,10 @@ export const Terminal = () => {
     setLatestLineId(exitLineId);
   };
 
-  if (isAIMode) {
+  if (isChatMode) {
     return (
-      <div className="w-full max-w-4xl mx-auto">
-        <ChatMode onExit={exitAIMode} />
+      <div className="relative z-30 w-full max-w-4xl">
+        <ChatMode onExit={exitChatMode} />
       </div>
     );
   }

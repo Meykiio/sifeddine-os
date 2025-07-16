@@ -5,12 +5,25 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
 
+# Dependencies
 node_modules
+
+# Build outputs
 dist
 dist-ssr
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Local development
 *.local
+
+# Background images (add your own)
+public/background-images/*
+!public/background-images/.gitkeep
 
 # Editor directories and files
 .vscode/*
@@ -18,6 +31,13 @@ dist-ssr
 .idea
 .DS_Store
 *.suo
+
+# OS generated files
+.DS_Store?
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 *.ntvs*
 *.njsproj
 *.sln

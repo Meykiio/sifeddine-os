@@ -1,11 +1,13 @@
 
-# Sifeddine.xyz — Terminal OS Interface
+# Sifeddine.xyz — Terminal OS Experience
 
 A futuristic terminal interface with glassmorphism design, featuring interactive commands and AI chat integration.
 
 ## 🚀 Live Demo
 
-**URL**: https://lovable.dev/projects/6b8c4bd2-191d-4602-92c1-2f422f9ef464
+**URL**: https://sifeddine.xyz
+
+> 💡 **Note**: For the best experience, please view this portfolio on a desktop device.
 
 ## ✨ Features
 
@@ -33,7 +35,7 @@ A futuristic terminal interface with glassmorphism design, featuring interactive
 
 - **Framework**: React with TypeScript
 - **Styling**: Tailwind CSS with custom glassmorphism
-- **UI Components**: shadcn/ui
+- **UI Components**: [Lovable](https://lovable.dev/) (shadcn/ui based)
 - **Icons**: Lucide React
 - **AI Integration**: OpenAI GPT-4 API
 - **Build Tool**: Vite
@@ -41,13 +43,7 @@ A futuristic terminal interface with glassmorphism design, featuring interactive
 
 ## 🚀 Quick Start
 
-### Option 1: Using Lovable (Recommended)
-
-1. Visit the [Lovable Project](https://lovable.dev/projects/6b8c4bd2-191d-4602-92c1-2f422f9ef464)
-2. Start prompting to make changes
-3. Changes are automatically saved and deployed
-
-### Option 2: Local Development
+### Local Development
 
 1. **Clone the repository**
    ```bash
@@ -189,11 +185,39 @@ src/
 
 ## 🤝 Contributing
 
-This project is built with Lovable, making contributions super easy:
+## Contributing
 
-1. **Via Lovable**: Use the chat interface to suggest changes
-2. **Via GitHub**: Fork → make changes → pull request
-3. **Via Issues**: Report bugs or suggest features
+Contributions are welcome! Here's how you can help:
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a pull request
+
+## Credits
+
+Built by [Sifeddine Mebarki](https://github.com/Meykiio)
+
+### Inspiration
+
+This site was inspired by a creative CV I saw online that used actual HTML-like tags to tell their story. That raw, code-is-content vibe stayed with me — so I made something that felt just as personal, playful, and weirdly functional.
+
+### Special Thanks
+
+- **[Lovable](https://lovable.dev/)**: For the beautiful, accessible, and customizable UI components that power this portfolio's interface.
+- **The open-source community**: For continuously pushing the boundaries of what's possible and sharing knowledge generously.
+
+Big love to all the vibe coders pushing weird, fun, and beautiful things into the world. You inspire me daily.
+
+### Connect with Me
+
+- **Instagram**: [sifeddine.m](https://www.instagram.com/sifeddine.m/)
+- **GitHub**: [Meykiio](https://github.com/Meykiio)
+- **LinkedIn**: [Sifeddine Mebarki](https://www.linkedin.com/in/sifeddine-mebarki-a3883a18b/?originalSubdomain=dz)
+- **TikTok**: [sifeddine_meb](https://tiktok.com/@sifeddine_meb)
+- **Hugging Face**: [sifeddine](https://huggingface.co/sifeddine)
+- **Facebook**: [sifeddinemeb](https://web.facebook.com/sifeddinemeb)
 
 ## 📝 License
 

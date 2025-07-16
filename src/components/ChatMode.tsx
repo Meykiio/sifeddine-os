@@ -25,8 +25,9 @@ export const ChatMode = ({ onExit }: ChatModeProps) => {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -37,8 +38,27 @@ export const ChatMode = ({ onExit }: ChatModeProps) => {
   }, [messages]);
 
   useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
+    if (!isLoading) {
+      inputRef.current?.focus();
+    }
+  }, [isLoading, messages]);
+
+  const exitChatMode = async () => {
+    setIsExiting(true);
+    
+    // Wait for the fade out transition
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    onExit();
+    const background = document.getElementById('background-image');
+    if (background) {
+      background.style.backgroundImage = 'url(/background-images/background.png)';
+      background.style.filter = 'none';
+    }
+    
+    // Reset the exiting state after the transition
+    setTimeout(() => setIsExiting(false), 100);
+  };
 
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
@@ -97,34 +117,68 @@ For now, feel free to explore the other commands or try again in a moment.`,
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
+    } else if (e.key === 'Enter' && e.shiftKey) {
+      // Allow Shift+Enter for new line
+      const target = e.target as HTMLInputElement | HTMLTextAreaElement;
+      const start = target.selectionStart || 0;
+      const end = target.selectionEnd || 0;
+      const value = target.value;
+      
+      setInput(value.substring(0, start) + '\n' + value.substring(end));
+      
+      // Move cursor to after the newline
+      requestAnimationFrame(() => {
+        if (target) {
+          target.selectionStart = target.selectionEnd = start + 1;
+        }
+      });
+      
+      e.preventDefault();
     }
   };
 
   return (
-    <div className="backdrop-blur-[20px] bg-black/30 border border-purple-400/30 rounded-2xl shadow-2xl shadow-purple-400/20 overflow-hidden ring-1 ring-purple-400/10">
-      {/* Chat Header */}
-      <div className="bg-black/50 border-b border-purple-400/30 px-6 py-4 flex items-center gap-3 backdrop-blur-sm">
-        <button
-          onClick={onExit}
-          className="flex items-center gap-2 text-purple-400/80 hover:text-purple-400 transition-colors"
-        >
-          <ArrowLeft size={16} />
-          <span className="text-sm font-mono">Back to Terminal</span>
-        </button>
-        <div className="flex-1 text-center">
-          <span className="text-purple-400/90 text-sm font-mono font-medium flex items-center justify-center gap-2">
-            <Bot size={16} />
-            AI Chat Mode — Powered by GPT
-          </span>
+    <div className="flex flex-col h-[80vh] max-w-4xl w-full mx-auto bg-black/50 backdrop-blur-sm rounded-lg overflow-hidden border border-cyan-400/30 shadow-2xl shadow-cyan-500/20 transition-all duration-500">
+      {/* Header */}
+      <div className="bg-black/60 border-b border-cyan-400/20 p-4 flex items-center justify-between">
+        <div className="flex items-center space-x-2">
+          <button 
+            onClick={() => {
+              onExit();
+              // Reset background when exiting chat mode
+              const background = document.getElementById('background-image');
+              if (background) {
+                background.style.backgroundImage = 'url(/background-images/background.png)';
+                background.style.filter = 'none';
+              }
+            }}
+            className="p-1.5 rounded-full hover:bg-white/10 transition-colors group"
+            aria-label="Exit chat mode"
+          >
+            <ArrowLeft className="w-4 h-4 text-cyan-400 group-hover:text-white transition-colors" />
+          </button>
+          <div className="flex items-center space-x-2">
+            <Bot className="w-5 h-5 text-cyan-400" />
+            <span className="text-cyan-400 font-mono text-sm">B.R.O. AI Assistant</span>
+          </div>
+        </div>
+        <div className="text-xs text-cyan-400/60 font-mono">
+          {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </div>
       </div>
 
-      {/* Chat Messages */}
-      <div className="bg-black/40 backdrop-blur-sm h-[500px] overflow-y-auto p-6 custom-scrollbar">
+      {/* Messages */}
+      <div 
+        className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar"
+        style={{
+          background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5))',
+          backdropFilter: 'blur(4px)'
+        }}
+      >
         <div className="space-y-4">
           {messages.map((message) => (
             <div
@@ -173,15 +227,16 @@ For now, feel free to explore the other commands or try again in a moment.`,
       {/* Chat Input */}
       <div className="bg-black/50 border-t border-purple-400/30 p-4 backdrop-blur-sm">
         <div className="flex gap-3">
-          <input
+          <textarea
             ref={inputRef}
-            type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyPress={handleKeyPress}
+            onKeyDown={handleKeyPress}
             placeholder="Ask me anything about Sifeddine or just chat..."
-            className="flex-1 bg-black/40 border border-purple-400/30 rounded-lg px-4 py-2 text-purple-100 placeholder-purple-400/60 focus:outline-none focus:border-purple-400/60 font-mono text-sm backdrop-blur-sm"
+            className="flex-1 bg-black/40 border border-purple-400/30 rounded-lg px-4 py-2 text-purple-100 placeholder-purple-400/60 focus:outline-none focus:border-purple-400/60 font-mono text-sm backdrop-blur-sm resize-none min-h-[40px] max-h-[120px] overflow-y-auto"
             disabled={isLoading}
+            rows={1}
+            style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(168, 85, 247, 0.5) transparent' }}
           />
           <button
             onClick={sendMessage}
