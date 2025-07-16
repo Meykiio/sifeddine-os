@@ -1,23 +1,29 @@
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { TerminalLine } from './Terminal';
 
 interface TerminalOutputProps {
   line: TerminalLine;
   onContentUpdate?: () => void;
+  shouldAnimate?: boolean;
 }
 
-export const TerminalOutput = ({ line, onContentUpdate }: TerminalOutputProps) => {
+export const TerminalOutput = ({ line, onContentUpdate, shouldAnimate = false }: TerminalOutputProps) => {
   const [displayedText, setDisplayedText] = useState('');
-  const [isTyping, setIsTyping] = useState(true);
+  const [isTyping, setIsTyping] = useState(false);
+  const hasAnimatedRef = useRef(false);
 
   useEffect(() => {
-    if (line.type === 'command') {
+    // If this line has already been animated or shouldn't animate, show immediately
+    if (hasAnimatedRef.current || !shouldAnimate || line.type === 'command') {
       setDisplayedText(line.content);
       setIsTyping(false);
       return;
     }
 
+    // Mark as animated to prevent re-animation
+    hasAnimatedRef.current = true;
+    
     let currentIndex = 0;
     const text = line.content;
     setDisplayedText('');
@@ -35,10 +41,10 @@ export const TerminalOutput = ({ line, onContentUpdate }: TerminalOutputProps) =
         setIsTyping(false);
         clearInterval(typeInterval);
       }
-    }, 8); // Much faster typing speed (was 20ms, now 8ms)
+    }, 5); // Faster typing speed
 
     return () => clearInterval(typeInterval);
-  }, [line.content, line.type, onContentUpdate]);
+  }, [line.content, line.type, onContentUpdate, shouldAnimate]);
 
   const getLineStyles = () => {
     switch (line.type) {

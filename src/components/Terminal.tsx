@@ -8,6 +8,7 @@ export interface TerminalLine {
   type: 'command' | 'output' | 'welcome';
   content: string;
   timestamp: number;
+  shouldAnimate?: boolean;
 }
 
 const surpriseFacts = [
@@ -20,64 +21,63 @@ const surpriseFacts = [
 ];
 
 const commands: Record<string, string | (() => string)> = {
-  help: "Available commands: home, about, projects, lab, mindset, contact, surprise, help ai – type one to explore my digital soul.",
-  home: `Hey, I'm Sifeddine. I build systems that run without me. Not lazy—smart. 
+  help: `These are your options:
+ • home      – Kick things off
+ • about     – Peek inside my head
+ • projects  – See my caffeine‑free curiosities
+ • lab       – Enter the distraction workshop
+ • mindset   – Steal my brain hacks
+ • contact   – Slide into my DMs
+ • surprise  – Get a mind‑blowing AI fact
+ • help ai   – Talk to my AI alter‑ego`,
+  home: `Hey, I'm Sifeddine.
+I get bored fast, so I build things to stay entertained.
+Welcome to my little corner of the internet—no fluff, all vibe.
+Think of this as the front door to my digital Space.`,
+  about: `I'm allergic to doing the same thing twice. Repetition = Headaches.
+Some people meditate; I build. Some people journal; I provoke AI debates.
 
-Welcome to my corner of the internet where automation meets artistry. I don't just write code; I craft digital experiences that solve real problems while I sleep. 
+Based in Algiers, living rent‑free in my own head.
+My entourage: too many browser tabs, half‑baked side quests, and a digital doppelgänger that judges my code.
 
-Think of me as your friendly neighborhood system architect with a caffeine addiction and an unhealthy obsession with making things work perfectly... automatically.`,
-  about: `I build tools because I'm allergic to doing the same thing twice. Seriously, repetition gives me hives.
+Pro tip: I judge success by how little I have to lift a finger after I build something.`,
+  projects: `🔥 On my shelf:
+ • Yuno      – CAPTCHA meets micro‑adventure ("Are you human?" now feels like fun)
+ • Receipto  – Making receipts stop being paper nightmares
+ • Wishdrop  – A wish‑granting wall for good vibes
 
-My philosophy? If I have to do it more than once, I'll spend 10 hours automating what takes 10 minutes manually. It's not about being lazy—it's about being strategically efficient.
+Each started as a dumb "what if" and became something people actually use.`,
+  lab: `Welcome to the Lab—a glorious distraction zone:
 
-I'm passionate about systems thinking, elegant automation, and making technology work FOR humans instead of the other way around. Currently obsessed with AI, generative interfaces, and finding the perfect balance between chaos and order.
+ • I grab random "what ifs" and duct‑tape them into prototypes
+ • I dare AI to finish my punchlines (and sometimes it does)
+ • I break my own projects just to see if I can outsmart myself
 
-Pro tip: I measure success not by hours worked, but by problems solved while I'm not working.`,
-  projects: `Here's what happens when curiosity meets caffeine:
+It's chaotic, impulsive, and oddly satisfying.`,
+  mindset: `Mindset: Keep It Real  
+I don't claim to know it all, I'm just someone who gives things a shot.  
 
-🎯 Yuno — CAPTCHA meets gaming. Because proving you're human shouldn't feel like punishment. It's a puzzle game that actually makes bot detection... fun? Revolutionary, I know.
+• When something breaks, I learn more than I grumble.  
+• I dive into weird ideas because you never know what sticks.  
+• I move fast, make mistakes, and own them.  
+• Progress beats perfection—small steps still count.  
 
-📊 Receipto — Turn your shopping receipts into live stock predictions. Upload a grocery receipt, watch it predict market trends. It's either genius or complete nonsense. Probably both.
+Friendly reminder:  
+Stay curious, stay humble, and let your work do the talking.`,
+  contact: `No forms. No newsletters. Zero spam.
 
-💝 Wishdrop — Anonymous wish fulfillment meets chaotic kindness. People drop wishes, strangers fulfill them. It's like Secret Santa but year-round and slightly unhinged.
+Hit me up if you:
+ • Have a half‑baked idea that's actually cool
+ • Want to offload the boring stuff to a bot
+ • Just need someone who codes like a poet with issues
 
-Each project started as a "what if" and evolved into a "why not." The best kind of problem-solving happens when you're not taking yourself too seriously.`,
-  lab: `Welcome to my digital playground where weird ideas come to life:
-
-🧪 Generosity Games — Experiments in human kindness powered by code
-🎨 AI-Prompted Interfaces — UIs that redesign themselves based on user behavior  
-⚡ Systems That Misbehave — Intentionally unpredictable automation that somehow works better
-🎲 Chaos Engineering — Breaking things on purpose to make them unbreakable
-
-This is where I test the boundaries between logic and creativity. Some experiments fail spectacularly. Others accidentally change how I think about everything.
-
-The lab motto: "If it's not at least 73% ridiculous, it's not worth building."`,
-  mindset: `I don't chase hustle—I chase leverage. Here's my operating system:
-
-🎯 Principle #1: If it repeats, I systemize it. Manual labor is for emergencies only.
-
-🧠 Principle #2: If it's weird but works, I keep it. Conventional wisdom is often conventionally wrong.
-
-⚡ Principle #3: Efficiency through intelligent laziness. Work smarter, not harder, not longer.
-
-🎨 Principle #4: Systems should be beautiful, even if no one sees them. Ugly code creates ugly problems.
-
-🚀 Principle #5: Build for the future you, who won't remember why you did things this way.
-
-My secret weapon? I treat every problem like a puzzle that can be solved once and automated forever. It's not about avoiding work—it's about making work work for you.`,
-  contact: `Ready to slide into my DMs? Here's where you can find me causing digital mayhem:
-
-📸 Instagram: @sifeddine.m — Behind-the-scenes chaos and coffee updates
-🐙 GitHub: Meykiio — Where the magic happens (and bugs get squashed)
-📱 TikTok: @sifeddine_meb — Quick wins and automation hacks
-📧 Email: hello@sifeddine.xyz — For serious inquiries and wild collaboration ideas
-
-Fair warning: I respond faster to interesting problems than small talk. Come with a challenge, leave with a solution (or at least a really good story).
-
-P.S. If you're a recruiter, please include the word "automation" in your subject line so I know you actually read this. 😉`,
+Instagram: @sifeddine.m
+GitHub: Meykiio
+TikTok: @sifeddine_meb
+Email: sifeddine.meb96@gmail.com`,
   surprise: () => surpriseFacts[Math.floor(Math.random() * surpriseFacts.length)],
   clear: "",
-  "help ai": "Initializing AI chat mode... Welcome to the future of conversation! 🤖"
+  "help ai": "AI mode activated…\n[Terminal morphs into ChatGPT interface—speak your mind.]"
 };
 
 export const Terminal = () => {
@@ -85,10 +85,14 @@ export const Terminal = () => {
     {
       id: '1',
       type: 'welcome',
-      content: "Welcome to Sifeddine's Shell v2.0\nType 'help' for commands or 'help ai' to chat with my AI assistant.",
-      timestamp: Date.now()
+      content: "Hello, World !\nType 'help' for commands or 'help ai' to chat with my AI sidekick.\n$",
+      timestamp: Date.now(),
+      shouldAnimate: true
     }
   ]);
+  
+  // Track the latest line ID to determine which lines should animate
+  const [latestLineId, setLatestLineId] = useState<string>('1');
   
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
@@ -119,16 +123,19 @@ export const Terminal = () => {
       id: `cmd-${Date.now()}`,
       type: 'command',
       content: command,
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      shouldAnimate: false
     };
 
     if (trimmedCommand === 'clear') {
       setLines([commandLine]);
+      setLatestLineId(commandLine.id);
       return;
     }
 
     if (trimmedCommand === 'help ai') {
       setLines(prev => [...prev, commandLine]);
+      setLatestLineId(commandLine.id);
       setIsAIMode(true);
       return;
     }
@@ -136,16 +143,19 @@ export const Terminal = () => {
     const commandHandler = commands[trimmedCommand];
     const response = typeof commandHandler === 'function' 
       ? commandHandler()
-      : commandHandler || `Command not found: ${trimmedCommand}. Type 'help' for available commands.`;
+      : commandHandler || `Command not found.\nType 'help' to see what actually works—or try 'surprise' if you dare.`;
     
+    const outputLineId = `out-${Date.now()}`;
     const outputLine: TerminalLine = {
-      id: `out-${Date.now()}`,
+      id: outputLineId,
       type: 'output',
       content: response,
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      shouldAnimate: true
     };
 
     setLines(prev => [...prev, commandLine, outputLine]);
+    setLatestLineId(outputLineId);
   };
 
   const getCommandSuggestions = (input: string): string[] => {
@@ -156,13 +166,16 @@ export const Terminal = () => {
 
   const exitAIMode = () => {
     setIsAIMode(false);
+    const exitLineId = `ai-exit-${Date.now()}`;
     const exitLine: TerminalLine = {
-      id: `ai-exit-${Date.now()}`,
+      id: exitLineId,
       type: 'output',
       content: "Exited AI chat mode. Type 'help ai' to return or continue with regular commands.",
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      shouldAnimate: true
     };
     setLines(prev => [...prev, exitLine]);
+    setLatestLineId(exitLineId);
   };
 
   if (isAIMode) {
@@ -175,12 +188,15 @@ export const Terminal = () => {
 
   return (
     <div className="w-full max-w-4xl mx-auto">
-      {/* Terminal Window - Enhanced glassmorphism with sharp edges */}
-      <div className="backdrop-blur-[25px] bg-black/20 border-2 border-cyan-400/40 shadow-2xl shadow-cyan-400/30 overflow-hidden ring-2 ring-cyan-400/20" style={{ 
-        background: 'rgba(0, 0, 0, 0.25)',
-        borderRadius: '4px',
-        boxShadow: '0 0 40px rgba(0, 255, 255, 0.3), inset 0 0 20px rgba(0, 255, 255, 0.1)'
-      }}>
+      {/* Terminal Window - New glassmorphism with sharp edges */}
+      <div style={{
+        backdropFilter: 'blur(7px) saturate(200%)',
+        WebkitBackdropFilter: 'blur(7px) saturate(200%)',
+        backgroundColor: 'rgba(93, 93, 93, 0.18)',
+        borderRadius: '12px',
+        border: '1px solid rgba(255, 255, 255, 0.125)',
+        boxShadow: '0 0 40px rgba(0, 255, 255, 0.3)'
+      }} className="overflow-hidden ring-2 ring-cyan-400/20">
         {/* Terminal Header */}
         <div className="bg-black/60 border-b-2 border-cyan-400/40 px-6 py-4 flex items-center gap-3 backdrop-blur-sm">
           <div className="flex gap-2">
@@ -205,6 +221,7 @@ export const Terminal = () => {
                 key={line.id} 
                 line={line} 
                 onContentUpdate={scrollToBottom}
+                shouldAnimate={line.shouldAnimate}
               />
             ))}
           </div>
