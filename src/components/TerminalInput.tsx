@@ -100,11 +100,11 @@ export const TerminalInput = ({
     <div className="relative">
       {/* Suggestions */}
       {suggestions.length > 0 && (
-        <div className="absolute bottom-full mb-2 left-0 bg-black/80 backdrop-blur-sm border border-cyan-400/30 rounded-lg overflow-hidden">
+        <div className="absolute bottom-full mb-2 left-0 bg-black/80 backdrop-blur-sm border border-cyan-400/30 rounded-lg overflow-hidden z-10">
           {suggestions.map((suggestion, index) => (
             <div
               key={suggestion}
-              className={`px-3 py-2 text-sm cursor-pointer transition-colors ${
+              className={`px-3 py-2 text-xs sm:text-sm cursor-pointer transition-colors ${
                 index === selectedSuggestion 
                   ? 'bg-cyan-400/20 text-cyan-400' 
                   : 'text-cyan-400/70 hover:bg-cyan-400/10'
@@ -124,23 +124,25 @@ export const TerminalInput = ({
 
       {/* Input Line */}
       <div className="flex items-center text-cyan-400">
-        <span className="text-cyan-400 mr-2">$</span>
+        <span className="text-cyan-400 mr-2 text-xs sm:text-sm">$</span>
         <div className="flex-1 relative">
-        <input
-          ref={inputRef}
-          type="text"
-          value={input}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          className={`bg-transparent border-none outline-none text-cyan-400 w-full ${disabled ? 'opacity-50 cursor-not-allowed' : 'placeholder-cyan-400/40'}`}
-          placeholder={disabled ? "Please wait..." : "Type a command..."}
-          autoComplete="off"
-          spellCheck="false"
-          disabled={disabled}
-        />
+          <input
+            ref={inputRef}
+            type="text"
+            value={input}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            className={`bg-transparent border-none outline-none text-cyan-400 w-full text-xs sm:text-sm ${
+              disabled ? 'opacity-50 cursor-not-allowed' : 'placeholder-cyan-400/40'
+            }`}
+            placeholder={disabled ? "Please wait..." : "Type a command..."}
+            autoComplete="off"
+            spellCheck="false"
+            disabled={disabled}
+          />
           {/* Cursor */}
           <span 
-            className={`absolute top-0 text-cyan-400 transition-opacity duration-100 ${
+            className={`absolute top-0 text-cyan-400 transition-opacity duration-100 text-xs sm:text-sm ${
               showCursor ? 'opacity-100' : 'opacity-0'
             }`}
             style={{ left: `${input.length * 0.6}em` }}

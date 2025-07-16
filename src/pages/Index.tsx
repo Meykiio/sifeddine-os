@@ -1,10 +1,5 @@
-
 import { useState, useEffect } from 'react';
 import { Terminal } from "@/components/Terminal";
-
-interface TerminalProps {
-  onBackgroundTransition: (isTransitioning: boolean) => void;
-}
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -27,6 +22,7 @@ const Index = () => {
           isLoading ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
       />
+      
       {/* Background Images with crossfade transition */}
       <div className="fixed inset-0 z-0 w-screen h-screen">
         {/* First Background */}
@@ -37,7 +33,7 @@ const Index = () => {
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
-            backgroundAttachment: 'fixed',
+            backgroundAttachment: window.innerWidth > 768 ? 'fixed' : 'scroll',
             width: '100vw',
             height: '100vh',
             opacity: isTransitioning ? 0 : 1,
@@ -57,7 +53,7 @@ const Index = () => {
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
-            backgroundAttachment: 'fixed',
+            backgroundAttachment: window.innerWidth > 768 ? 'fixed' : 'scroll',
             width: '100vw',
             height: '100vh',
             opacity: isTransitioning ? 1 : 0,
@@ -74,10 +70,10 @@ const Index = () => {
       </div>
       
       {/* Animated grid pattern */}
-      <div className="absolute inset-0 z-10 bg-[linear-gradient(rgba(0,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,255,0.03)_1px,transparent_1px)] bg-[size:50px_50px] pointer-events-none animate-pulse" style={{ animationDuration: '4s' }} />
+      <div className="absolute inset-0 z-10 bg-[linear-gradient(rgba(0,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,255,0.03)_1px,transparent_1px)] bg-[size:30px_30px] sm:bg-[size:50px_50px] pointer-events-none animate-pulse" style={{ animationDuration: '4s' }} />
       
       {/* Main terminal container */}
-      <div className={`relative z-20 min-h-screen flex items-center justify-center p-4 transition-opacity duration-1000 ${
+      <div className={`relative z-20 min-h-screen flex items-center justify-center p-2 sm:p-4 transition-opacity duration-1000 ${
         isLoading ? 'opacity-0' : 'opacity-100'
       }`}>
         <Terminal onBackgroundTransition={setIsTransitioning} />
