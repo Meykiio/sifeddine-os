@@ -10,8 +10,7 @@ interface ChatModeProps {
 export const ChatMode = ({ onExit }: ChatModeProps) => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [sessionId] = useState(() => `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
-  
+  const [sessionId] = useState('local-session');
   const { messages, loading: messagesLoading, addMessage, clearMessages } = useChatMessages(sessionId);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -32,13 +31,13 @@ export const ChatMode = ({ onExit }: ChatModeProps) => {
 
   // Add welcome message if no messages exist
   useEffect(() => {
-    if (!messagesLoading && messages.length === 0) {
+    if (messages.length === 0) {
       addMessage(
         "Hey! I'm B.R.O. (Barely Responding Optimally) — Sifeddine's sarcastic digital sidekick. Ask me anything about his work, projects, or just chat about tech and automation. What's on your mind?",
         'assistant'
       );
     }
-  }, [messagesLoading, messages.length, addMessage]);
+  }, []);
 
   const exitChatMode = async () => {
     onExit();
@@ -68,7 +67,7 @@ export const ChatMode = ({ onExit }: ChatModeProps) => {
     setInput('');
     setIsLoading(true);
 
-    // Add user message to database
+    // Add user message to chat
     await addMessage(userMessage, 'user');
 
     try {
@@ -91,8 +90,8 @@ export const ChatMode = ({ onExit }: ChatModeProps) => {
         throw new Error(response.error.message || 'Failed to get AI response');
       }
 
-      // Add assistant response to database
-      await addMessage(response.data.reply, 'assistant');
+      // Add assistant response to chat
+      await addMessage(response.data.reply || 'Sorry, I had trouble generating a response. Please try again.', 'assistant');
     } catch (error) {
       const errorMessage = `Oops! ${error instanceof Error ? error.message : 'Something went wrong with the AI connection. The digital gremlins are at it again!'} 
 
