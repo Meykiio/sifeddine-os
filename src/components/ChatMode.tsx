@@ -1,8 +1,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, Send, Bot, User } from 'lucide-react';
-
-const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY || '<YOUR_OPENAI_API_KEY_HERE>';
+import { supabase } from '@/integrations/supabase/client';
 
 interface Message {
   id: string;
@@ -20,7 +19,7 @@ export const ChatMode = ({ onExit }: ChatModeProps) => {
     {
       id: '1',
       role: 'assistant',
-      content: "Hey! I'm Sifeddine's AI assistant. Ask me anything about his work, projects, philosophy, or just chat about tech, automation, and digital chaos. What's on your mind?",
+      content: "Hey! I'm B.R.O. (Barely Responding Optimally) — Sifeddine's sarcastic digital sidekick. Ask me anything about his work, projects, or just chat about tech and automation. What's on your mind?",
       timestamp: Date.now()
     }
   ]);
@@ -56,25 +55,10 @@ export const ChatMode = ({ onExit }: ChatModeProps) => {
     setIsLoading(true);
 
     try {
-      // Check if API key is properly set
-      if (OPENAI_API_KEY === '<YOUR_OPENAI_API_KEY_HERE>' || !OPENAI_API_KEY) {
-        throw new Error('API key not configured');
-      }
-
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${OPENAI_API_KEY}`
-        },
-        body: JSON.stringify({
-          model: 'gpt-4',
+      const response = await supabase.functions.invoke('chat-ai', {
+        body: {
           messages: [
-            {
-              role: 'system',
-              content: `You are Sifeddine's AI assistant. You represent Sifeddine - a creative developer who builds systems that run without him. He's passionate about automation, systems thinking, and making technology work for humans. He has a witty, slightly sarcastic personality and measures success by problems solved while not working. He's built projects like Yuno (CAPTCHA meets gaming), Receipto (receipts to stock predictions), and Wishdrop (anonymous wish fulfillment). Respond in his voice - intelligent, humorous, and focused on elegant solutions. Keep responses conversational but insightful.`
-            },
-            ...messages.slice(-5).map(msg => ({
+            ...messages.slice(-10).map(msg => ({
               role: msg.role,
               content: msg.content
             })),
@@ -82,21 +66,18 @@ export const ChatMode = ({ onExit }: ChatModeProps) => {
               role: 'user',
               content: input
             }
-          ],
-          max_tokens: 500,
-          temperature: 0.7
-        })
+          ]
+        }
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to get response from OpenAI');
+      if (response.error) {
+        throw new Error(response.error.message || 'Failed to get AI response');
       }
 
-      const data = await response.json();
       const assistantMessage: Message = {
         id: `assistant-${Date.now()}`,
         role: 'assistant',
-        content: data.choices[0].message.content,
+        content: response.data.reply,
         timestamp: Date.now()
       };
 
@@ -105,9 +86,7 @@ export const ChatMode = ({ onExit }: ChatModeProps) => {
       const errorMessage: Message = {
         id: `error-${Date.now()}`,
         role: 'assistant',
-        content: `Oops! ${error instanceof Error && error.message === 'API key not configured' 
-          ? 'Looks like the OpenAI API key needs to be configured. Add your key to the environment variables and refresh!' 
-          : 'Something went wrong with the AI connection. The digital gremlins are at it again!'} 
+        content: `Oops! ${error instanceof Error ? error.message : 'Something went wrong with the AI connection. The digital gremlins are at it again!'} 
 
 For now, feel free to explore the other commands or try again in a moment.`,
         timestamp: Date.now()
@@ -145,7 +124,7 @@ For now, feel free to explore the other commands or try again in a moment.`,
       </div>
 
       {/* Chat Messages */}
-      <div className="bg-black/40 backdrop-blur-sm h-[500px] overflow-y-auto p-6">
+      <div className="bg-black/40 backdrop-blur-sm h-[500px] overflow-y-auto p-6 custom-scrollbar">
         <div className="space-y-4">
           {messages.map((message) => (
             <div

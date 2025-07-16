@@ -6,14 +6,16 @@ interface TerminalInputProps {
   historyIndex: number;
   setHistoryIndex: (index: number) => void;
   getSuggestions: (input: string) => string[];
+  disabled?: boolean;
 }
 
 export const TerminalInput = ({ 
   onExecute, 
   commandHistory, 
   historyIndex, 
-  setHistoryIndex,
-  getSuggestions 
+  setHistoryIndex, 
+  getSuggestions,
+  disabled = false
 }: TerminalInputProps) => {
   const [input, setInput] = useState('');
   const [showCursor, setShowCursor] = useState(true);
@@ -124,17 +126,18 @@ export const TerminalInput = ({
       <div className="flex items-center text-cyan-400">
         <span className="text-cyan-400 mr-2">$</span>
         <div className="flex-1 relative">
-          <input
-            ref={inputRef}
-            type="text"
-            value={input}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyDown}
-            className="bg-transparent border-none outline-none text-cyan-400 w-full placeholder-cyan-400/40"
-            placeholder="Type a command..."
-            autoComplete="off"
-            spellCheck="false"
-          />
+        <input
+          ref={inputRef}
+          type="text"
+          value={input}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+          className={`bg-transparent border-none outline-none text-cyan-400 w-full ${disabled ? 'opacity-50 cursor-not-allowed' : 'placeholder-cyan-400/40'}`}
+          placeholder={disabled ? "Please wait..." : "Type a command..."}
+          autoComplete="off"
+          spellCheck="false"
+          disabled={disabled}
+        />
           {/* Cursor */}
           <span 
             className={`absolute top-0 text-cyan-400 transition-opacity duration-100 ${

@@ -6,9 +6,10 @@ interface TerminalOutputProps {
   line: TerminalLine;
   onContentUpdate?: () => void;
   shouldAnimate?: boolean;
+  onTypingComplete?: () => void;
 }
 
-export const TerminalOutput = ({ line, onContentUpdate, shouldAnimate = false }: TerminalOutputProps) => {
+export const TerminalOutput = ({ line, onContentUpdate, shouldAnimate = false, onTypingComplete }: TerminalOutputProps) => {
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const hasAnimatedRef = useRef(false);
@@ -39,6 +40,7 @@ export const TerminalOutput = ({ line, onContentUpdate, shouldAnimate = false }:
         }
       } else {
         setIsTyping(false);
+        onTypingComplete?.();
         clearInterval(typeInterval);
       }
     }, 5); // Faster typing speed

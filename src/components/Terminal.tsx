@@ -29,7 +29,8 @@ const commands: Record<string, string | (() => string)> = {
  • mindset   – Steal my brain hacks
  • contact   – Slide into my DMs
  • surprise  – Get a mind‑blowing AI fact
- • help ai   – Talk to my AI alter‑ego`,
+ • help ai   – Talk to my AI alter‑ego
+ • clear     – Clear the terminal`,
   home: `Hey, I'm Sifeddine.
 I get bored fast, so I build things to stay entertained.
 Welcome to my little corner of the internet—no fluff, all vibe.
@@ -93,6 +94,7 @@ export const Terminal = () => {
   
   // Track the latest line ID to determine which lines should animate
   const [latestLineId, setLatestLineId] = useState<string>('1');
+  const [isTyping, setIsTyping] = useState(false);
   
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
@@ -110,6 +112,8 @@ export const Terminal = () => {
   }, [lines]);
 
   const executeCommand = (command: string) => {
+    if (isTyping) return; // Prevent commands while typing
+    
     const trimmedCommand = command.trim().toLowerCase();
     
     // Add command to history
@@ -156,6 +160,7 @@ export const Terminal = () => {
 
     setLines(prev => [...prev, commandLine, outputLine]);
     setLatestLineId(outputLineId);
+    setIsTyping(true);
   };
 
   const getCommandSuggestions = (input: string): string[] => {
@@ -172,7 +177,7 @@ export const Terminal = () => {
       type: 'output',
       content: "Exited AI chat mode. Type 'help ai' to return or continue with regular commands.",
       timestamp: Date.now(),
-      shouldAnimate: true
+      shouldAnimate: false // Don't animate when returning from AI mode
     };
     setLines(prev => [...prev, exitLine]);
     setLatestLineId(exitLineId);
@@ -212,7 +217,7 @@ export const Terminal = () => {
         {/* Terminal Content */}
         <div 
           ref={terminalRef}
-          className="bg-black/30 backdrop-blur-sm min-h-[500px] max-h-[600px] overflow-y-auto p-6 font-mono text-sm"
+          className="bg-black/30 backdrop-blur-sm min-h-[500px] max-h-[600px] overflow-y-auto p-6 font-mono text-sm custom-scrollbar"
         >
           {/* Terminal Lines */}
           <div className="space-y-2 mb-4">
@@ -221,7 +226,8 @@ export const Terminal = () => {
                 key={line.id} 
                 line={line} 
                 onContentUpdate={scrollToBottom}
-                shouldAnimate={line.shouldAnimate}
+                shouldAnimate={line.shouldAnimate && line.id === latestLineId}
+                onTypingComplete={() => setIsTyping(false)}
               />
             ))}
           </div>
@@ -233,6 +239,7 @@ export const Terminal = () => {
             historyIndex={historyIndex}
             setHistoryIndex={setHistoryIndex}
             getSuggestions={getCommandSuggestions}
+            disabled={isTyping}
           />
         </div>
       </div>
