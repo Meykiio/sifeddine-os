@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
+// @ts-ignore - This is a valid import at runtime
 import { inject } from "@vercel/analytics";
 import path from "path";
 
