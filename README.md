@@ -4,7 +4,7 @@ A futuristic terminal interface with glassmorphism design, featuring interactive
 
 ## 🚀 Live Demo
 
-**URL**: https://sifeddine.xyz
+**URL**: https://sifeddine-os.vercel.app/
 
 > 💡 **Note**: Now fully responsive! Enjoy the complete experience on desktop, tablet, and mobile devices.
 
