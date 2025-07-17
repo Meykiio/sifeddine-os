@@ -258,6 +258,15 @@ export const Terminal = ({ onBackgroundTransition }: TerminalProps) => {
       {/* Bottom hint */}
       <div className="text-center mt-4 sm:mt-6 text-cyan-400/70 text-xs sm:text-sm px-4">
         Press <kbd className="px-1.5 sm:px-2 py-1 bg-black/60 backdrop-blur-sm border border-cyan-400/40 shadow-lg text-xs" style={{ borderRadius: '2px' }}>Tab</kbd> for autocomplete • <kbd className="px-1.5 sm:px-2 py-1 bg-black/60 backdrop-blur-sm border border-cyan-400/40 shadow-lg text-xs" style={{ borderRadius: '2px' }}>help ai</kbd> for chat mode
+        {/* Social links */}
+        <div className="text-center mt-2 sm:mt-4 text-cyan-400/70 text-xs sm:text-sm px-4">
+          <a href="https://instagram.com/sifeddine.m" target="_blank" className="inline-block mr-4 hover:text-cyan-400 transition-colors">
+            <kbd className="px-1.5 sm:px-2 py-1 bg-black/60 backdrop-blur-sm border border-cyan-400/40 shadow-lg text-xs" style={{ borderRadius: '2px' }}>Instagram</kbd>
+          </a>
+          <a href="https://github.com/Meykiio" target="_blank" className="inline-block hover:text-cyan-400 transition-colors">
+            <kbd className="px-1.5 sm:px-2 py-1 bg-black/60 backdrop-blur-sm border border-cyan-400/40 shadow-lg text-xs" style={{ borderRadius: '2px' }}>GitHub</kbd>
+          </a>
+        </div>
       </div>
     </div>
   );

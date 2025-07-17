@@ -1,6 +1,6 @@
 # Sifeddine.xyz — Terminal OS Experience
 
-A futuristic terminal interface with glassmorphism design, featuring interactive commands, AI chat integration, and persistent message storage.
+A futuristic terminal interface with glassmorphism design, featuring interactive commands and AI chat integration.
 
 ## 🚀 Live Demo
 
@@ -19,9 +19,6 @@ A futuristic terminal interface with glassmorphism design, featuring interactive
 
 ### AI Chat System
 - **AI Chat Mode**: ChatGPT-powered assistant integration (B.R.O.)
-- **Persistent Chat Storage**: Messages saved in Supabase database
-- **Real-time Synchronization**: Live chat updates across sessions
-- **Session Management**: Organized chat history by session
 - **Mobile-Optimized Chat**: Touch-friendly interface for mobile devices
 
 ### Responsive Design
@@ -41,7 +38,7 @@ A futuristic terminal interface with glassmorphism design, featuring interactive
 - `mindset` - Operating principles and methodology
 - `contact` - Get in touch across various platforms
 - `surprise` - Random mind-blowing programming/AI facts
-- `help ai` - Switch to AI chat mode with persistent storage
+- `help ai` - Switch to AI chat mode
 - `clear` - Clear the terminal
 
 ## 🛠 Tech Stack
@@ -57,8 +54,8 @@ A futuristic terminal interface with glassmorphism design, featuring interactive
 ### Backend & Database
 - **Database**: Supabase PostgreSQL
 - **Real-time**: Supabase real-time subscriptions
-- **AI Integration**: OpenAI GPT-4o-mini API
-- **Edge Functions**: Supabase Edge Functions for secure API handling
+- **AI Integration**: OpenAI GPT-4o-mini API via Supabase Edge Functions
+- **Edge Functions**: Supabase Edge Functions for OpenAI API proxy
 - **Authentication**: Supabase Auth (configured)
 
 ### Deployment
@@ -72,8 +69,8 @@ A futuristic terminal interface with glassmorphism design, featuring interactive
 
 1. **Clone the repository**
    ```bash
-   git clone <YOUR_GIT_URL>
-   cd <YOUR_PROJECT_NAME>
+   git clone https://github.com/Meykiio/sifeddine-os
+   cd sifeddine-os
    ```
 
 2. **Install dependencies**
@@ -93,12 +90,7 @@ A futuristic terminal interface with glassmorphism design, featuring interactive
    OPENAI_API_KEY=your_openai_api_key
    ```
 
-4. **Set up Supabase database**
-   ```bash
-   # Run the migration to create chat_messages table
-   # Execute the SQL in supabase/migrations/create_chat_messages.sql
-   # in your Supabase dashboard SQL editor
-   ```
+
 
 5. **Start development server**
    ```bash
@@ -116,8 +108,9 @@ A futuristic terminal interface with glassmorphism design, featuring interactive
 
 1. Create a new Supabase project at [supabase.com](https://supabase.com)
 2. Get your project URL and anon key from Settings > API
-3. Run the migration SQL from `supabase/migrations/create_chat_messages.sql`
-4. The chat system will automatically work with persistent storage
+3. The chat system will automatically work with OpenAI API proxy via Edge Functions
+
+**Note**: This project only uses Supabase Edge Functions for OpenAI API proxying. No database tables or RLS policies are required.
 
 ### OpenAI API Key Setup
 
@@ -136,7 +129,7 @@ A futuristic terminal interface with glassmorphism design, featuring interactive
    OPENAI_API_KEY=sk-your-key-here
    ```
 
-3. The AI chat mode will automatically work with persistent message storage
+3. The AI chat mode will automatically work with OpenAI API proxy via Supabase Edge Functions
 
 ## 🚀 Deployment
 
@@ -215,19 +208,7 @@ Customize the AI assistant in `supabase/functions/chat-ai/index.ts`:
 const systemPrompt = `You are B.R.O., Sifeddine's AI assistant...`;
 ```
 
-### Database Schema
 
-The chat messages are stored in Supabase with this schema:
-
-```sql
-chat_messages:
-  - id (uuid, primary key)
-  - content (text, message content)  
-  - role (text, 'user' or 'assistant')
-  - session_id (text, groups messages by session)
-  - created_at (timestamptz)
-  - updated_at (timestamptz)
-```
 
 ## 🔍 Project Structure
 
@@ -237,13 +218,11 @@ src/
 │   ├── Terminal.tsx        # Main terminal interface
 │   ├── TerminalInput.tsx   # Command input handling
 │   ├── TerminalOutput.tsx  # Response display
-│   └── ChatMode.tsx        # AI chat interface with persistence
-├── hooks/
-│   └── useChatMessages.ts  # Chat data management hook
+│   └── ChatMode.tsx        # AI chat interface
 ├── pages/
 │   └── Index.tsx          # Main page with responsive background
 ├── integrations/
-│   └── supabase/          # Database client and types
+│   └── supabase/          # Edge Functions configuration
 └── index.css             # Global styles and responsive design
 ```
 
@@ -255,11 +234,10 @@ src/
 - Ensure you have OpenAI credits available
 - Verify Supabase connection is working
 
-### Database Issues
+### Edge Function Issues
 - Ensure Supabase project is set up correctly
-- Run the migration SQL from `supabase/migrations/create_chat_messages.sql`
 - Check that environment variables are set properly
-- Verify Row Level Security policies are enabled
+- Verify Edge Function deployment is successful
 
 ### Commands Not Responding
 - Check console for JavaScript errors
@@ -295,22 +273,20 @@ Contributions are welcome! Here's how you can help:
 - Ensure backward compatibility
 - Update documentation for new features
 
-## 📊 Recent Updates
+## 📊 Initial Open Source Release
 
-### Version 2.0 - AI Chat Persistence & Responsive Design
-- ✅ **Persistent Chat Storage**: Messages now saved in Supabase database
-- ✅ **Real-time Synchronization**: Live chat updates across sessions
-- ✅ **Mobile-First Responsive Design**: Optimized for all devices
-- ✅ **Touch-Friendly Interface**: Enhanced mobile interactions
-- ✅ **Session Management**: Organized chat history by session
-- ✅ **Performance Optimizations**: Faster loading and smoother animations
+### Version 1.0 - Terminal OS Experience
+- ✅ **Glassmorphic Terminal**: Pixel-perfect glass design with neon accents
+- ✅ **AI Chat Integration**: OpenAI API proxy via Supabase Edge Functions
+- ✅ **Command System**: Interactive command-based navigation
+- ✅ **Mobile-First Design**: Fully responsive interface
+- ✅ **Performance Optimizations**: Smooth animations and quick responses
 
-### Key Improvements
-- **100% Mobile Responsive**: Works perfectly on all screen sizes
-- **Real-time Chat**: Instant message synchronization
-- **Enhanced UX**: Better loading states and error handling
-- **Database Integration**: Robust Supabase integration with RLS
-- **Zero Breaking Changes**: All existing functionality preserved
+### Key Features
+- **Interactive Terminal Interface**: Type commands to explore content
+- **AI Chat Integration**: Chat with B.R.O. using OpenAI
+- **Responsive Design**: Works on all devices
+- **Clean Architecture**: Modular and maintainable codebase
 
 ## Credits
 
@@ -334,7 +310,6 @@ Big love to all the vibe coders pushing weird, fun, and beautiful things into th
 - **Instagram**: [sifeddine.m](https://www.instagram.com/sifeddine.m/)
 - **GitHub**: [Meykiio](https://github.com/Meykiio)
 - **LinkedIn**: [Sifeddine Mebarki](https://www.linkedin.com/in/sifeddine-mebarki-a3883a18b/?originalSubdomain=dz)
-- **TikTok**: [sifeddine_meb](https://tiktok.com/@sifeddine_meb)
 - **Hugging Face**: [sifeddine](https://huggingface.co/sifeddine)
 - **Facebook**: [sifeddinemeb](https://web.facebook.com/sifeddinemeb)
 
