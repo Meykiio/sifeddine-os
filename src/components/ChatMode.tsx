@@ -38,7 +38,7 @@ export const ChatMode = ({ onExit }: ChatModeProps) => {
         'assistant'
       );
     }
-  }, []);
+  }, [addMessage, messages.length]);
 
   const exitChatMode = async () => {
     onExit();

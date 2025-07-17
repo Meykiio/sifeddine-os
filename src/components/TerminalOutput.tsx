@@ -46,7 +46,7 @@ export const TerminalOutput = ({ line, onContentUpdate, shouldAnimate = false, o
     }, 5); // Faster typing speed
 
     return () => clearInterval(typeInterval);
-  }, [line.content, line.type, onContentUpdate, shouldAnimate]);
+  }, [line.content, line.type, onContentUpdate, shouldAnimate, onTypingComplete]);
 
   const getLineStyles = () => {
     switch (line.type) {
