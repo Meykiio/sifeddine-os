@@ -109,9 +109,12 @@ export const Terminal = ({ onBackgroundTransition }: TerminalProps) => {
   }, [isChatMode, onBackgroundTransition]);
 
   const terminalRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    if (terminalRef.current) {
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    } else if (terminalRef.current) {
       terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
     }
   };
@@ -248,6 +251,7 @@ export const Terminal = ({ onBackgroundTransition }: TerminalProps) => {
             getSuggestions={getCommandSuggestions}
             disabled={isTyping}
           />
+          <div ref={bottomRef} />
         </div>
       </div>
 

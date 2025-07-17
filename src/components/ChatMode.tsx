@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { toast } from '@/components/ui/sonner';
 import { ArrowLeft, Send, Bot, User, Trash2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useChatMessages } from '@/hooks/useChatMessages';
@@ -93,6 +94,10 @@ export const ChatMode = ({ onExit }: ChatModeProps) => {
       // Add assistant response to chat
       await addMessage(response.data.reply || 'Sorry, I had trouble generating a response. Please try again.', 'assistant');
     } catch (error) {
+      // Toast for missing key or other API error
+      if (error instanceof Error && error.message.includes('OpenAI API key not configured')) {
+        toast.error('OpenAI API key is missing. Add it in project settings.');
+      }
       const errorMessage = `Oops! ${error instanceof Error ? error.message : 'Something went wrong with the AI connection. The digital gremlins are at it again!'} 
 
 For now, feel free to explore the other commands or try again in a moment.`;

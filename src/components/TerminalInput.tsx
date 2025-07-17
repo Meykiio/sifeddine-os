@@ -61,6 +61,10 @@ export const TerminalInput = ({
       if (suggestions.length > 0) {
         setSelectedSuggestion(prev => Math.max(0, prev - 1));
       } else if (commandHistory.length > 0) {
+        if (commandHistory.length === 0) {
+          setInput('');
+          return;
+        }
         const newIndex = historyIndex === -1 ? commandHistory.length - 1 : Math.max(0, historyIndex - 1);
         setHistoryIndex(newIndex);
         setInput(commandHistory[newIndex]);
