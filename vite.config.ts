@@ -1,7 +1,5 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
-// @ts-ignore - This is a valid import at runtime
-import { inject } from "@vercel/analytics";
 import path from "path";
 
 // https://vitejs.dev/config/
@@ -10,18 +8,7 @@ export default defineConfig({
     host: "::",
     port: 8080,
   },
-  plugins: [
-    react(),
-    {
-      name: 'inject-vercel-analytics',
-      transformIndexHtml(html) {
-        return html.replace(
-          '<head>',
-          `<head>\n            <script>${inject()}</script>`
-        );
-      },
-    },
-  ],
+  plugins: [react()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
